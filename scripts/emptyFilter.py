@@ -11,11 +11,11 @@ def promptFilter(promptStr:str):
     index = -1
     for str in promptStr:
         index += 1
-        if not inBlock and str == '<' and promptStr[index:].find('>'):
-            if prompt not in setPrompt and prompt.strip():
-                setPrompt.append(prompt)
+        if not inBlock and str == '<' and '>' in promptStr[index:]:
+            if prompt.strip() and prompt not in setPrompt:
+                setPrompt.append(prompt.strip().lower())
                 prompts.append(' ')
-                prompts.append(prompt.strip())
+                prompts.append(prompt.strip().lower())
             inBlock = True
             prompts.append(str)
             prompt = ''
@@ -28,10 +28,10 @@ def promptFilter(promptStr:str):
             else:
                 prompt += str
         elif not inBlock and str in splitSign:
-            if prompt not in setPrompt and prompt.strip():
-                setPrompt.append(prompt)
+            if prompt.strip() and prompt.strip() not in setPrompt:
+                setPrompt.append(prompt.strip().lower())
                 prompts.append(' ')
-                prompts.append(prompt.strip())
+                prompts.append(prompt.strip().lower())
             str = str.replace('，', ',').replace(', ', ',').replace('（', '(').replace('）', ')')
             if str == ',' and len(prompts) and prompts[-1] in [',','(','']:
                 str = ''
@@ -44,8 +44,8 @@ def promptFilter(promptStr:str):
             prompt = ''
         else:
             prompt += str
-    if (prompt != ''):
-        prompts.append(prompt)
+    if prompt.strip() and prompt.strip() not in setPrompt:
+        setPrompt.append(prompt.strip().lower())
     return re.sub(r',$|^,','',''.join(prompts))
 
 class emptyFilter(scripts.Script):
