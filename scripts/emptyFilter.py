@@ -3,13 +3,15 @@ import re
 from modules import scripts
 splitSign = [',','(',')','[',']','（','）','，']
 
-def promptFilter(promptStr):
+def promptFilter(promptStr:str):
     inBlock = False
     prompt = ''
     setPrompt = []
     prompts = []
+    index = -1
     for str in promptStr:
-        if not inBlock and str == '<':
+        index += 1
+        if not inBlock and str == '<' and promptStr[index:].find('>'):
             if prompt not in setPrompt and prompt.strip():
                 setPrompt.append(prompt)
                 prompts.append(' ')
@@ -23,7 +25,7 @@ def promptFilter(promptStr):
                 prompts.append(prompt)
                 prompts.append(str)
                 prompt = ''
-            elif str != ' ':
+            else:
                 prompt += str
         elif not inBlock and str in splitSign:
             if prompt not in setPrompt and prompt.strip():
@@ -42,6 +44,8 @@ def promptFilter(promptStr):
             prompt = ''
         else:
             prompt += str
+    if (prompt != ''):
+        prompts.append(prompt)
     return re.sub(r',$|^,','',''.join(prompts))
 
 class emptyFilter(scripts.Script):
