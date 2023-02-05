@@ -89,7 +89,9 @@ def promptFilter(promptStr:str):
                     prompts[-1] = ')'
                 elif str == ')' and len(prompts) and prompts[-1] == '(':
                     prompts[-1] = ''
-            if need:
+                else:
+                    prompts.append(str)
+            elif need:
                 prompts.append(str)
             elif str != ',':
                 prompts.append(str)
